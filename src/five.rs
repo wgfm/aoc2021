@@ -8,25 +8,17 @@ use std::{fs, io};
 pub fn first(lines: io::Lines<io::BufReader<fs::File>>) -> Result<(), Box<dyn std::error::Error>> {
     let lines: Vec<Line> = lines
         .map(|l| l.unwrap().parse().unwrap())
-        //        .filter(|l: &Line| l.is_straight())
+        //        .filter(|l: &Line| l.is_straight()) // remove comment for star 1
         .collect();
+
+    println!("{:?}", lines);
 
     let mut points: HashMap<(i32, i32), i32> = HashMap::new();
 
     for line in lines {
-        if line.is_straight() {
-            if line.from.y == line.to.y {
-                for x in line.from.x..=line.to.x {
-                    *points.entry((x, line.to.y)).or_insert(0) += 1
-                }
-            }
-            if line.from.x == line.to.x {
-                for y in line.from.y..=line.to.y {
-                    *points.entry((line.to.x, y)).or_insert(0) += 1
-                }
-            }
-        } else {
-            // Implement star 2
+        for Point { x, y } in line.iterator() {
+            println!("Point({},{})", x, y);
+            *points.entry((x, y)).or_insert(0) += 1;
         }
     }
 
@@ -53,17 +45,58 @@ impl Line {
     fn is_straight(&self) -> bool {
         self.from.x == self.to.x || self.from.y == self.to.y
     }
+
+    fn iterator(&self) -> LineIterator {
+        let x_step = if self.from.x == self.to.x {
+            0
+        } else if self.from.x > self.to.x {
+            -1
+        } else {
+            1
+        };
+        let y_step = if self.from.y == self.to.y {
+            0
+        } else if self.from.y > self.to.y {
+            -1
+        } else {
+            1
+        };
+        LineIterator {
+            line: &self,
+            x: self.from.x,
+            y: self.from.y,
+            x_step,
+            y_step,
+        }
+    }
 }
 
 struct LineIterator<'a> {
     line: &'a Line,
+    x: i32,
+    y: i32,
+    x_step: i32,
+    y_step: i32,
 }
 
-impl Iterator for Line {
+impl<'a> Iterator for LineIterator<'a> {
     type Item = Point;
 
     fn next(&mut self) -> Option<Self::Item> {
-        None
+        let result = Point {
+            x: self.x,
+            y: self.y,
+        };
+        self.x += self.x_step;
+        self.y += self.y_step;
+
+        // Ugly double off-by-one error :/
+        if self.x == self.line.to.x + 2 * self.x_step && self.y == self.line.to.y + 2 * self.y_step
+        {
+            return None;
+        }
+
+        Some(result)
     }
 }
 
