@@ -5,6 +5,7 @@ use std::io::{BufRead, BufReader};
 mod five;
 mod four;
 mod one;
+mod six;
 mod three;
 mod two;
 
@@ -18,5 +19,5 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let file = File::open(&args[1])?;
     let lines = BufReader::new(file).lines();
 
-    five::first(lines)
+    six::first(lines)
 }
