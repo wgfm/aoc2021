@@ -2,6 +2,7 @@ use std::env;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 
+mod eight;
 mod five;
 mod four;
 mod one;
@@ -20,5 +21,5 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let file = File::open(&args[1])?;
     let lines = BufReader::new(file).lines();
 
-    seven::second(lines)
+    eight::second(lines)
 }
