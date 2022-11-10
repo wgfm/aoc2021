@@ -1,8 +1,11 @@
+#![allow(dead_code)]
+
 use std::env;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 
 mod eight;
+mod fifteen;
 mod five;
 mod four;
 mod fourteen;

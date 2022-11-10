@@ -68,6 +68,7 @@ mod test {
     use super::*;
     use std::io::BufRead;
 
+    /*
     #[test]
     fn star_four_test() {
         let lines = io::BufReader::new(fs::File::open("data/day2.test").expect("")).lines();
@@ -85,4 +86,5 @@ mod test {
         assert_eq!(x, 15);
         assert_eq!(depth, 10);
     }
+    */
 }
